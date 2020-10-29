@@ -8,25 +8,25 @@ const minJumps = arr => {
   let jumps = 0;
   // current index we're on
   let currentIdx = 0;
-  console.log("CURRENT INDEX>>>>>>>>", currentIdx)
+  console.log("CURRENT INDEX >>>>>>>>", currentIdx)
 
-  // looping through the array while we're still approaching the right-most element
+  // looping through the array while we're still approaching the last item in the array
   while (currentIdx < arr.length-1) {
-    // is the end within reach?
-    if (arr[currentIdx] >= (arr.length-1) - currentIdx) {
+    // What is the furthest index we can reach from the current position?
+    const furthestIdx = currentIdx+arr[currentIdx];
+    console.log("FURTHEST AVAILABLE INDEX >>>>>>>>>", furthestIdx )
+    // if the next jump can get us to/past the last item in the array, return
+    if (furthestIdx >= arr.length-1) {
       jumps++;
       console.log("______________TOTAL JUMPS:", jumps, "________________")
       return jumps;
     }
     // pass a subsection of the array to resolve the move forward with the best potential gains
-    const furthestIdx = currentIdx+arr[currentIdx];
-    console.log("FURTHEST AVAILABLE INDEX >>>>>>>>>", furthestIdx )
-    console.log("args for best gains:", arr.slice(currentIdx+1, furthestIdx+1))
     const indexesToJump = bestGains(arr.slice(currentIdx+1, furthestIdx+1));
     currentIdx += indexesToJump;
-    console.log("New Current Index >>>>>>> ", currentIdx)
+    console.log("NEW CURRENT INDEX >>>>>>> ", currentIdx)
     jumps++;
-    console.log("TOTAL JUMPS >>>>>>", jumps)
+    console.log("TOTAL JUMPS SO FAR >>>>>>", jumps)
   }
   // use a helper func to determine the best real estate option -- nested loop that returns the index that offers the best future index gains
   // set current idx to that idx and increment counter
@@ -34,19 +34,19 @@ const minJumps = arr => {
 };
 
 const bestGains = (subArray) => {
-  console.log("Is SubArray the same? >>>>>>>>", subArray)
+  console.log("SubArray to check for best gains >>>>>>>>", subArray)
   // default best is the final elem in the subArray
   let lastIdx = subArray.length-1;
   let best = {
-    indexGain: subArray[lastIdx] + subArray.length,
+    indexGain: subArray[lastIdx] + subArray.length-1,
     value: subArray[lastIdx],
     i: lastIdx
   }
   console.log("Starting Best (last elem in subArray >>>>>>>", best)
 
-  // Loop backwards to see if there's an opportunity for greater index gain
+  // Loop backwards to see if there's potential for greater index gain
   for (let i = subArray.length-2; i >= 0; i--) {
-    // the current index gain opportunity  is the total of how far along the subArray we are, plus the value stored at the current element in the subArray
+    // the index gain potential is the total of where we are (index) in the subArray, plus the value of the current element in the subArray
     let value = subArray[i]
     let indexGain = value + i;
     console.log("CURRENT INDEX GAIN OPPORTUNITY >>>>>>>", indexGain)
@@ -56,7 +56,7 @@ const bestGains = (subArray) => {
       console.log("NEW BEST GAINS >>>>>>>>>>>>", best)
     }
   }
-  // the first idx in this subArray is at subArray[0], but in the main func, it's +1 from the currentIdx
+  // the first element in this subArray is at subArray[0], but in the main func, it's +1 from the currentIdx
   return best.i + 1;
 }
 
